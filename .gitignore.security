@@ -1,0 +1,6 @@
+# VPS Credentials
+VPS-CREDENTIALS.txt
+*.pem
+*.key
+.env.local
+.env.production

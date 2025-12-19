@@ -1,0 +1,59 @@
+#!/bin/bash
+# Nginx Configuration Script
+# Usage: bash configure-nginx.sh yourdomain.com
+
+if [ -z "$1" ]; then
+  echo "Usage: bash configure-nginx.sh yourdomain.com"
+  exit 1
+fi
+
+DOMAIN=$1
+
+echo "Configuring Nginx for $DOMAIN..."
+
+cat > /etc/nginx/sites-available/moonlight-fiesta << EOF
+server {
+    listen 80;
+    server_name $DOMAIN www.$DOMAIN;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host \$host;
+        proxy_cache_bypass \$http_upgrade;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto \$scheme;
+    }
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json;
+
+    client_max_body_size 10M;
+}
+EOF
+
+# Enable site
+ln -sf /etc/nginx/sites-available/moonlight-fiesta /etc/nginx/sites-enabled/
+
+# Remove default site
+rm -f /etc/nginx/sites-enabled/default
+
+# Test configuration
+nginx -t
+
+# Reload Nginx
+systemctl reload nginx
+
+echo "✅ Nginx configured for $DOMAIN"
+echo "Visit: http://$DOMAIN"

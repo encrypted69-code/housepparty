@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Background Colors */
+    --color-background: #0F0F23; /* indigo-950 - Deep midnight for sophisticated canvas */
+    --color-foreground: #F8FAFC; /* slate-50 - Pure white for primary readability */
+    
+    /* Surface Colors */
+    --color-card: #1E1B4B; /* indigo-900 - Rich charcoal for elevated content areas */
+    --color-card-foreground: #F8FAFC; /* slate-50 - Pure white for card text */
+    
+    --color-popover: #1E1B4B; /* indigo-900 - Rich charcoal for popover backgrounds */
+    --color-popover-foreground: #F8FAFC; /* slate-50 - Pure white for popover text */
+    
+    /* Muted Colors */
+    --color-muted: #1E293B; /* slate-800 - Muted background for subtle elements */
+    --color-muted-foreground: #CBD5E1; /* slate-300 - Soft gray for hierarchy and subtlety */
+    
+    /* Primary Brand Colors */
+    --color-primary: #8B5CF6; /* violet-500 - Electric violet for premium CTAs and focus moments */
+    --color-primary-foreground: #FFFFFF; /* white - Pure white for contrast on primary */
+    
+    /* Secondary Colors */
+    --color-secondary: #06B6D4; /* cyan-500 - Cool cyan for secondary actions and highlights */
+    --color-secondary-foreground: #FFFFFF; /* white - Pure white for contrast on secondary */
+    
+    /* Accent Colors */
+    --color-accent: #EF4444; /* red-500 - Vibrant red for urgency and special offers */
+    --color-accent-foreground: #FFFFFF; /* white - Pure white for contrast on accent */
+    
+    /* Destructive Colors */
+    --color-destructive: #EF4444; /* red-500 - Clear red for helpful error guidance */
+    --color-destructive-foreground: #FFFFFF; /* white - Pure white for contrast on destructive */
+    
+    /* Success Colors */
+    --color-success: #10B981; /* emerald-500 - Confident green for positive confirmations */
+    --color-success-foreground: #FFFFFF; /* white - Pure white for contrast on success */
+    
+    /* Warning Colors */
+    --color-warning: #F59E0B; /* amber-500 - Warm amber for gentle alerts */
+    --color-warning-foreground: #FFFFFF; /* white - Pure white for contrast on warning */
+    
+    /* Error Colors */
+    --color-error: #EF4444; /* red-500 - Clear red for error states */
+    --color-error-foreground: #FFFFFF; /* white - Pure white for contrast on error */
+    
+    /* Border & Input Colors */
+    --color-border: rgba(255, 255, 255, 0.1); /* white with 10% opacity - Minimal borders for subtle separation */
+    --color-input: rgba(255, 255, 255, 0.1); /* white with 10% opacity - Input field borders */
+    --color-ring: #8B5CF6; /* violet-500 - Focus ring color matching primary */
+    
+    /* Neon Accent Colors for Disco Theme */
+    --color-neon-violet: #8A2BE2; /* blueviolet - BlueViolet for sophisticated nightlife mystique */
+    --color-neon-pink: #FF1493; /* deeppink - DeepPink for energetic disco culture */
+    --color-neon-cyan: #00FFFF; /* cyan - Cyan for high-contrast conversion elements */
+    --color-neon-lime: #32CD32; /* limegreen - LimeGreen for trust and communication */
+    --color-neon-orange: #FF4500; /* orangered - OrangeRed for urgency and CTAs */
+    
+    /* Spacing & Layout */
+    --radius: 0.5rem; /* 8px - Base border radius */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  /* Glassmorphism Effect */
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  /* Neon Glow Effects */
+  .glow-violet {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  
+  .glow-violet-strong {
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.6);
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  }
+  
+  .glow-pink {
+    box-shadow: 0 0 20px rgba(255, 20, 147, 0.3);
+  }
+  
+  .glow-lime {
+    box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+  }
+  
+  /* Soft Elevation Shadow */
+  .shadow-soft {
+    box-shadow: 0 8px 32px rgba(138, 43, 226, 0.15);
+  }
+  
+  /* Smooth Transitions */
+  .transition-smooth {
+    transition: all 0.3s ease-out;
+  }
+  
+  /* Hover Scale Effect */
+  .hover-scale:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Text Gradient */
+  .text-gradient-violet {
+    background: linear-gradient(135deg, #8B5CF6 0%, #8A2BE2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, #06B6D4 0%, #00FFFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Hide Scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
+}
