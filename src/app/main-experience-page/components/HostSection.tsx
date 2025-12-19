@@ -27,9 +27,7 @@ export default function HostSection() {
 
 
   const contactMethods = [
-  { icon: 'ChatBubbleLeftRightIcon', text: 'Live Chat', color: 'text-neon-cyan' },
-  { icon: 'PhoneIcon', text: 'WhatsApp', color: 'text-neon-lime' },
-  { icon: 'EnvelopeIcon', text: 'Email', color: 'text-neon-pink' }];
+  { icon: 'CameraIcon', text: 'Instagram', color: 'text-neon-pink' }];
 
 
   return (

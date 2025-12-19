@@ -45,16 +45,8 @@ const PricingSummary = ({ passType, addOns }: PricingSummaryProps) => {
     }, 0);
   };
 
-  const getSubtotal = (): number => {
-    return getPassPrice() + getAddOnsTotal();
-  };
-
-  const getTax = (): number => {
-    return Math.round(getSubtotal() * 0.18); // 18% GST
-  };
-
   const getTotal = (): number => {
-    return getSubtotal() + getTax();
+    return getPassPrice() + getAddOnsTotal();
   };
 
   const selectedAddOns = addOnOptions.filter(option => addOns.includes(option.id));
@@ -116,16 +108,7 @@ const PricingSummary = ({ passType, addOns }: PricingSummaryProps) => {
           <>
             <div className="flex items-center justify-between py-3 border-t border-border">
               <p className="font-medium text-muted-foreground">Subtotal</p>
-              <p className="font-bold text-foreground">₹{getSubtotal().toLocaleString('en-IN')}</p>
-            </div>
-
-            {/* Tax */}
-            <div className="flex items-center justify-between py-2">
-              <p className="text-sm text-muted-foreground flex items-center space-x-1">
-                <span>GST (18%)</span>
-                <Icon name="InformationCircleIcon" size={16} className="text-muted-foreground" />
-              </p>
-              <p className="text-sm font-medium text-foreground">₹{getTax().toLocaleString('en-IN')}</p>
+              <p className="font-bold text-foreground">₹{getTotal().toLocaleString('en-IN')}</p>
             </div>
 
             {/* Total */}

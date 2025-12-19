@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import BookingForm from './BookingForm';
 import PricingSummary from './PricingSummary';
+import PaymentModal from './PaymentModal';
 
 interface BookingFormData {
   fullName: string;
@@ -18,43 +20,53 @@ interface BookingFormData {
 const BookingPortalInteractive = () => {
   const [isHydrated, setIsHydrated] = useState(false);
   const [bookingData, setBookingData] = useState<BookingFormData | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     setIsHydrated(true);
   }, []);
 
-  const handleFormSubmit = (data: BookingFormData) => {
-    // Create WhatsApp message
-    const addOnLabels: Record<string, string> = {
-      'unlimited-food': 'Unlimited Food & Snacks',
-      'premium-drinks': 'Premium Drinks Package',
-      'vip-seating': 'VIP Lounge Seating',
-      'photo-booth': 'Private Photo Booth Access',
+  const calculateTotal = (data: BookingFormData) => {
+    const passPrice = data.passType === 'male' ? 1699 : 1299;
+    const addOnPrices: Record<string, number> = {
+      'unlimited-food': 500,
+      'premium-drinks': 1500,
+      'vip-seating': 2000,
+      'photo-booth': 800,
     };
+    const addOnsTotal = data.addOns.reduce((sum, id) => sum + (addOnPrices[id] || 0), 0);
+    return passPrice + addOnsTotal;
+  };
 
-    let message = `Hi, I want to book passes for 31st Dec\n\n`;
-    message += `📋 *Booking Details:*\n`;
-    message += `Name: ${data.fullName}\n`;
-    message += `Phone: ${data.phone}\n`;
-    message += `Email: ${data.email}\n\n`;
-    message += `🎫 *Pass Type:* ${data.passType === 'male' ? 'Male Entry Pass (₹1,699)' : 'Female Entry Pass (₹1,299)'}\n\n`;
+  const handleFormSubmit = (data: BookingFormData) => {
+    setBookingData(data);
+    const total = calculateTotal(data);
+    setTotalAmount(total);
+    setShowPaymentModal(true);
+  };
+
+  const handlePaymentComplete = (method: string) => {
+    setShowPaymentModal(false);
     
-    if (data.addOns.length > 0) {
-      message += `✨ *Add-ons:*\n`;
-      data.addOns.forEach(addOnId => {
-        message += `- ${addOnLabels[addOnId]}\n`;
-      });
-      message += `\n`;
+    if (bookingData) {
+      // Generate booking ID
+      const randomId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const bookingId = `HP31-${randomId}`;
+      
+      // Store booking data in localStorage to pass to success page
+      localStorage.setItem('lastBooking', JSON.stringify({
+        bookingId,
+        customerName: bookingData.fullName,
+        passType: bookingData.passType,
+        numberOfPasses: 1,
+        totalAmount
+      }));
     }
     
-    message += `Please confirm my booking!`;
-
-    // Encode message for URL
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/919768372013?text=${encodedMessage}`;
-    
-    // Redirect to WhatsApp
-    window.open(whatsappUrl, '_blank');
+    // Redirect to success page
+    router.push('/booking-confirmation-portal/success');
   };
 
   if (!isHydrated) {
@@ -103,6 +115,14 @@ const BookingPortalInteractive = () => {
           </div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal
+        isOpen={showPaymentModal}
+        onClose={() => setShowPaymentModal(false)}
+        totalAmount={totalAmount}
+        onPaymentComplete={handlePaymentComplete}
+      />
     </div>
   );
 };

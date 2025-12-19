@@ -14,9 +14,7 @@ export default function FooterSection() {
   ];
 
   const socialLinks = [
-    { icon: 'ChatBubbleLeftRightIcon', label: 'WhatsApp', color: 'text-neon-lime' },
-    { icon: 'EnvelopeIcon', label: 'Email', color: 'text-neon-cyan' },
-    { icon: 'PhoneIcon', label: 'Call', color: 'text-neon-pink' },
+    { icon: 'CameraIcon', label: 'Instagram', color: 'text-neon-pink' },
   ];
 
   return (
@@ -90,10 +88,6 @@ export default function FooterSection() {
               <a href="https://instagram.com/houseparty.sbs" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-smooth">
                 <Icon name="CameraIcon" size={20} className="text-neon-pink" />
                 <span className="text-sm">@houseparty.sbs</span>
-              </a>
-              <a href="https://wa.me/919768372103" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 text-muted-foreground hover:text-primary transition-smooth">
-                <Icon name="ChatBubbleLeftRightIcon" size={20} className="text-neon-lime" />
-                <span className="text-sm">+91 9768372103</span>
               </a>
             </div>
           </div>

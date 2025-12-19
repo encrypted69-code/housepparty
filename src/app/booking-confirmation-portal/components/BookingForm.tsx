@@ -7,6 +7,7 @@ interface BookingFormData {
   fullName: string;
   email: string;
   phone: string;
+  eventDate: '24' | '28' | '31' | '';
   passType: 'male' | 'female' | '';
   addOns: string[];
   agreeToTerms: boolean;
@@ -25,6 +26,7 @@ const BookingForm = ({ onSubmit, isProcessing }: BookingFormProps) => {
     fullName: '',
     email: '',
     phone: '',
+    eventDate: '',
     passType: '',
     addOns: [],
     agreeToTerms: false,
@@ -62,6 +64,10 @@ const BookingForm = ({ onSubmit, isProcessing }: BookingFormProps) => {
       newErrors.phone = 'Phone number is required';
     } else if (!/^[6-9]\d{9}$/.test(formData.phone)) {
       newErrors.phone = 'Invalid Indian phone number';
+    }
+
+    if (!formData.eventDate) {
+      newErrors.eventDate = 'Please select an event date';
     }
 
     if (!formData.passType) {
@@ -192,6 +198,79 @@ const BookingForm = ({ onSubmit, isProcessing }: BookingFormProps) => {
             </p>
           )}
         </div>
+      </div>
+
+      {/* Event Date Selection */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-gradient-violet flex items-center space-x-2">
+          <Icon name="CalendarIcon" size={24} />
+          <span>Select Event Date *</span>
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button
+            type="button"
+            onClick={() => setFormData({ ...formData, eventDate: '24' })}
+            className={`p-6 rounded-xl border-2 transition-smooth text-left ${
+              formData.eventDate === '24' ? 'border-primary bg-primary/10 glow-violet' : 'border-border hover:border-primary/50'
+            }`}
+            disabled={isProcessing}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-bold text-foreground">December 24th</span>
+              <Icon
+                name={formData.eventDate === '24' ? 'CheckCircleIcon' : 'CalendarIcon'}
+                size={24}
+                className={formData.eventDate === '24' ? 'text-primary' : 'text-muted-foreground'}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Christmas Eve Party</p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setFormData({ ...formData, eventDate: '28' })}
+            className={`p-6 rounded-xl border-2 transition-smooth text-left ${
+              formData.eventDate === '28' ? 'border-primary bg-primary/10 glow-violet' : 'border-border hover:border-primary/50'
+            }`}
+            disabled={isProcessing}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-bold text-foreground">December 28th</span>
+              <Icon
+                name={formData.eventDate === '28' ? 'CheckCircleIcon' : 'CalendarIcon'}
+                size={24}
+                className={formData.eventDate === '28' ? 'text-primary' : 'text-muted-foreground'}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">Weekend Party</p>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setFormData({ ...formData, eventDate: '31' })}
+            className={`p-6 rounded-xl border-2 transition-smooth text-left ${
+              formData.eventDate === '31' ? 'border-primary bg-primary/10 glow-violet' : 'border-border hover:border-primary/50'
+            }`}
+            disabled={isProcessing}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg font-bold text-foreground">December 31st</span>
+              <Icon
+                name={formData.eventDate === '31' ? 'CheckCircleIcon' : 'CalendarIcon'}
+                size={24}
+                className={formData.eventDate === '31' ? 'text-primary' : 'text-muted-foreground'}
+              />
+            </div>
+            <p className="text-sm text-muted-foreground mt-2">New Year's Eve</p>
+          </button>
+        </div>
+        {errors.eventDate && (
+          <p className="text-sm text-error flex items-center space-x-1">
+            <Icon name="ExclamationCircleIcon" size={16} />
+            <span>{errors.eventDate}</span>
+          </p>
+        )}
       </div>
 
       {/* Entry Pass Selection */}

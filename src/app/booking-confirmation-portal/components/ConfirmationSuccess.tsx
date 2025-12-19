@@ -3,36 +3,34 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Icon from '@/app/components/ui/AppIcon';
+import Image from 'next/image';
 
 interface ConfirmationSuccessProps {
   bookingId: string;
   passType: string;
   totalAmount: number;
-  paymentMethod: string;
+  customerName: string;
+  numberOfPasses?: number;
 }
 
-const ConfirmationSuccess = ({ bookingId, passType, totalAmount, paymentMethod }: ConfirmationSuccessProps) => {
+const ConfirmationSuccess = ({ bookingId, passType, totalAmount, customerName, numberOfPasses = 1 }: ConfirmationSuccessProps) => {
   const [isHydrated, setIsHydrated] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
 
   useEffect(() => {
     setIsHydrated(true);
-  }, []);
+    
+    // Generate QR code data
+    const qrData = `HOUSEPARTY-KOLKATA\nBooking ID: ${bookingId}\nDate: 31 Dec 2025\nName: ${customerName}\nPasses: ${numberOfPasses} (${passType === 'male' ? 'Male' : 'Female'})\nStatus: CONFIRMED`;
+    
+    // Generate QR code using API
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
+    setQrCodeUrl(qrUrl);
+  }, [bookingId, customerName, numberOfPasses, passType]);
 
-  const handleDownloadTicket = () => {
+  const handleInstagramContact = () => {
     if (!isHydrated) return;
-    // Simulate ticket download
-    alert('Ticket download will be available via email and WhatsApp');
-  };
-
-  const handleAddToCalendar = () => {
-    if (!isHydrated) return;
-    // Simulate calendar integration
-    alert('Event added to your calendar');
-  };
-
-  const handleWhatsAppContact = () => {
-    if (!isHydrated) return;
-    window.open('https://wa.me/919876543210?text=Hi, I have a question about my booking', '_blank');
+    window.open('https://www.instagram.com/houseparty.sbs/', '_blank');
   };
 
   if (!isHydrated) {
@@ -53,135 +51,133 @@ const ConfirmationSuccess = ({ bookingId, passType, totalAmount, paymentMethod }
         <div className="w-20 h-20 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-4">
           <Icon name="CheckCircleIcon" size={48} className="text-success" />
         </div>
-        <h2 className="text-3xl font-bold text-gradient-violet mb-2">Booking Confirmed!</h2>
-        <p className="text-muted-foreground">Your reservation has been successfully processed</p>
+        <h2 className="text-4xl font-bold text-gradient-violet mb-2">✅ BOOKING CONFIRMED</h2>
+        <p className="text-lg text-foreground">🎉 Your entry is successfully confirmed!</p>
       </div>
 
-      {/* Booking Details */}
-      <div className="glass-effect rounded-2xl p-8 border border-border space-y-6">
-        <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
-          <Icon name="DocumentTextIcon" size={24} className="text-primary" />
-          <span>Booking Details</span>
-        </h3>
+      {/* Main Booking Card with QR Code */}
+      <div className="glass-effect rounded-2xl p-8 border border-border">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left: Booking Details */}
+          <div className="lg:col-span-2 space-y-6">
+            <div>
+              <h3 className="text-2xl font-bold text-gradient-cyan mb-4">House Party Kolkata – New Year Bash</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <Icon name="CalendarIcon" size={20} className="text-primary" />
+                  <span className="text-muted-foreground">Date:</span>
+                  <span className="font-bold text-foreground">31st December (Night)</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Icon name="TicketIcon" size={20} className="text-primary" />
+                  <span className="text-muted-foreground">Booking ID:</span>
+                  <span className="font-mono font-bold text-foreground">{bookingId}</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Icon name="UserIcon" size={20} className="text-primary" />
+                  <span className="text-muted-foreground">Name:</span>
+                  <span className="font-medium text-foreground">{customerName}</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Icon name="UsersIcon" size={20} className="text-primary" />
+                  <span className="text-muted-foreground">Pass Type:</span>
+                  <span className="font-medium text-foreground">{passType === 'male' ? 'Male' : 'Female'} Entry</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Icon name="HashtagIcon" size={20} className="text-primary" />
+                  <span className="text-muted-foreground">Number of Passes:</span>
+                  <span className="font-medium text-foreground">{numberOfPasses}</span>
+                </div>
+                
+                <div className="flex items-center space-x-3">
+                  <Icon name="CheckCircleIcon" size={20} className="text-success" />
+                  <span className="text-muted-foreground">Status:</span>
+                  <span className="font-bold text-success">✅ Confirmed</span>
+                </div>
+              </div>
+            </div>
 
-        <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-border">
-            <span className="text-muted-foreground">Booking ID</span>
-            <span className="font-mono font-bold text-foreground">{bookingId}</span>
+            <div className="p-4 bg-card/50 rounded-lg border border-border">
+              <p className="text-sm font-bold text-foreground mb-2">📍 Venue Details</p>
+              <p className="text-sm text-muted-foreground">Venue details will be shared privately on Instagram</p>
+              <p className="text-sm text-foreground mt-1">⏰ Reporting Time: 9:30 PM onwards</p>
+            </div>
           </div>
 
-          <div className="flex items-center justify-between py-3 border-b border-border">
-            <span className="text-muted-foreground">Entry Pass Type</span>
-            <span className="font-medium text-foreground capitalize">{passType}</span>
-          </div>
-
-          <div className="flex items-center justify-between py-3 border-b border-border">
-            <span className="text-muted-foreground">Total Amount Paid</span>
-            <span className="font-bold text-gradient-cyan">₹{totalAmount.toLocaleString('en-IN')}</span>
-          </div>
-
-          <div className="flex items-center justify-between py-3 border-b border-border">
-            <span className="text-muted-foreground">Payment Method</span>
-            <span className="font-medium text-foreground capitalize">{paymentMethod}</span>
-          </div>
-
-          <div className="flex items-center justify-between py-3">
-            <span className="text-muted-foreground">Payment Status</span>
-            <span className="px-3 py-1 bg-success/20 text-success rounded-full text-sm font-medium flex items-center space-x-1">
-              <Icon name="CheckCircleIcon" size={16} />
-              <span>Confirmed</span>
-            </span>
+          {/* Right: QR Code */}
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="p-4 bg-white rounded-xl">
+              {qrCodeUrl && (
+                <Image 
+                  src={qrCodeUrl} 
+                  alt="Booking QR Code" 
+                  width={300} 
+                  height={300}
+                  className="w-full h-auto"
+                />
+              )}
+            </div>
+            <div className="text-center">
+              <p className="font-bold text-foreground mb-1">🔳 Show this QR code at the entry gate</p>
+              <p className="text-sm text-warning">(Entry allowed only with valid QR)</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Event Details */}
-      <div className="glass-effect rounded-2xl p-8 border border-border space-y-4">
-        <h3 className="text-xl font-bold text-foreground flex items-center space-x-2">
-          <Icon name="CalendarDaysIcon" size={24} className="text-primary" />
-          <span>Event Information</span>
-        </h3>
-
-        <div className="space-y-3">
-          <div className="flex items-start space-x-3">
-            <Icon name="CalendarIcon" size={20} className="text-primary mt-1" />
-            <div>
-              <p className="text-sm text-muted-foreground">Date</p>
-              <p className="font-medium text-foreground">31st December 2025 (New Year's Eve)</p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3">
-            <Icon name="ClockIcon" size={20} className="text-primary mt-1" />
-            <div>
-              <p className="text-sm text-muted-foreground">Time</p>
-              <p className="font-medium text-foreground">9:00 PM - 3:00 AM</p>
-            </div>
-          </div>
-
-          <div className="flex items-start space-x-3">
-            <Icon name="MapPinIcon" size={20} className="text-primary mt-1" />
-            <div>
-              <p className="text-sm text-muted-foreground">Venue</p>
-              <p className="font-medium text-foreground">Private Disco Resort, Kolkata</p>
-              <p className="text-sm text-muted-foreground mt-1">Exact location will be shared 24 hours before the event</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <button
-          onClick={handleDownloadTicket}
-          className="p-4 glass-effect border border-border rounded-xl hover:border-primary transition-smooth flex items-center justify-center space-x-2 group"
-        >
-          <Icon name="TicketIcon" size={20} className="text-primary group-hover:scale-110 transition-smooth" />
-          <span className="font-medium text-foreground">Download Ticket</span>
-        </button>
-
-        <button
-          onClick={handleAddToCalendar}
-          className="p-4 glass-effect border border-border rounded-xl hover:border-secondary transition-smooth flex items-center justify-center space-x-2 group"
-        >
-          <Icon name="CalendarIcon" size={20} className="text-secondary group-hover:scale-110 transition-smooth" />
-          <span className="font-medium text-foreground">Add to Calendar</span>
-        </button>
-      </div>
-
-      {/* Important Information */}
+      {/* Important Instructions */}
       <div className="glass-effect rounded-2xl p-6 border border-warning/50 bg-warning/5">
         <div className="flex items-start space-x-3">
           <Icon name="ExclamationTriangleIcon" size={24} className="text-warning mt-1" />
-          <div className="space-y-2">
-            <p className="font-bold text-foreground">Important Reminders</p>
-            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-              <li>Carry a valid government-issued photo ID for age verification</li>
-              <li>Entry is strictly for guests 18 years and above</li>
-              <li>Photography and videography are restricted - respect privacy policies</li>
-              <li>Dress code: Smart casual or party attire</li>
-              <li>Gates open at 9:00 PM sharp - arrive on time</li>
+          <div className="space-y-3">
+            <p className="font-bold text-foreground text-lg">⚠️ Important Instructions</p>
+            <ul className="text-sm text-foreground space-y-2">
+              <li className="flex items-start space-x-2">
+                <span>•</span>
+                <span>Carry a valid ID proof</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span>•</span>
+                <span>No re-entry allowed</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span>•</span>
+                <span>QR valid for one-time entry only</span>
+              </li>
+              <li className="flex items-start space-x-2">
+                <span>•</span>
+                <span>Management reserves the right to deny entry for misconduct</span>
+              </li>
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* Get Ready Message */}
+      <div className="glass-effect rounded-2xl p-8 border border-primary text-center">
+        <p className="text-2xl font-bold text-gradient-cyan">💃🕺 Get ready for an unforgettable night!</p>
       </div>
 
       {/* Contact Support */}
       <div className="glass-effect rounded-2xl p-6 border border-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <Icon name="ChatBubbleLeftRightIcon" size={24} className="text-primary" />
+            <Icon name="CameraIcon" size={24} className="text-neon-pink" />
             <div>
               <p className="font-medium text-foreground">Need Help?</p>
-              <p className="text-sm text-muted-foreground">Contact us on WhatsApp</p>
+              <p className="text-sm text-muted-foreground">Contact us on Instagram</p>
             </div>
           </div>
           <button
-            onClick={handleWhatsAppContact}
-            className="px-6 py-2 bg-success text-white font-medium rounded-lg hover:scale-105 transition-smooth flex items-center space-x-2"
+            onClick={handleInstagramContact}
+            className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium rounded-lg hover:scale-105 transition-smooth flex items-center space-x-2"
           >
-            <Icon name="ChatBubbleLeftEllipsisIcon" size={20} />
-            <span>Chat Now</span>
+            <Icon name="CameraIcon" size={20} />
+            <span>Message Us</span>
           </button>
         </div>
       </div>
@@ -190,7 +186,7 @@ const ConfirmationSuccess = ({ bookingId, passType, totalAmount, paymentMethod }
       <div className="flex justify-center space-x-4">
         <Link
           href="/main-experience-page"
-          className="px-6 py-3 border border-border rounded-lg font-medium text-foreground hover:bg-card transition-smooth"
+          className="px-6 py-3 bg-neon-cyan text-background font-bold rounded-lg hover:scale-105 transition-smooth"
         >
           Back to Event Page
         </Link>
